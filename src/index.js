@@ -48,39 +48,38 @@ function removeProduct(event) {
 function createProduct() {
   //... your code goes here
   console.log("creating a new product");
+  // to make my life easier, I’ve added IDs to the inputs
   const productName = document.getElementById("name-input");
   const productPrice = document.getElementById("price-input");
 
   let product = document.createElement("tr");
   product.classList.add("product");
 
-  product.innerHTML = `<td class="name">
-            <span>${productName.value}</span>
-          </td>
-          <td class="price">$<span>${productPrice.value}</span></td>
-          <td class="quantity">
-            <input type="number" value="0" min="0" placeholder="Quantity" />
-          </td>
-          <td class="subtotal">$<span>0</span></td>
-          <td class="action">
-            <button class="btn btn-remove">Remove</button>
-          </td>
-        </tr>
-        <tr class="product">
-          <td class="name">
-            <span>Ironhack Towel</span>
-          </td>
-          <td class="price">$<span>5.00</span></td>
-          <td class="quantity">
-            <input type="number" value="0" min="0" placeholder="Quantity" />
-          </td>
-          <td class="subtotal">$<span>0</span></td>
-          <td class="action">
-            <button class="btn btn-remove">Remove</button>
-          </td>`;
+  // I found it easier to keep an overview
+  // in minimizing the use of .innerHTML
+  // IRL this would be the moment I’d add _lodash.js
+
+  [
+    ["name", `<span>${productName.value}</span>`],
+    ["price", `$<span>${productPrice.value}</span>`],
+    [
+      "quantity",
+      `<input type="number" value="0" min="0" placeholder="Quantity" />`,
+    ],
+    ["subtotal", `$<span>0</span>`],
+    ["action", `<button class="btn btn-remove">Remove</button>`],
+  ].forEach((item) => {
+    const td = document.createElement("td");
+    td.classList = item[0];
+    td.innerHTML = item[1];
+    product.appendChild(td);
+  });
+
+  const btn = product.querySelector("button.btn-remove");
+  btn.addEventListener("click", removeProduct);
 
   document.querySelector("#cart tbody").appendChild(product);
-  productName.value = 0;
+  productName.value = "";
   productPrice.value = 0;
 }
 
@@ -90,7 +89,6 @@ window.addEventListener("load", () => {
 
   //... your code goes here
   const removeBtns = document.querySelectorAll(".btn.btn-remove");
-
   removeBtns.forEach((btn) => {
     btn.addEventListener("click", removeProduct);
   });
